@@ -1,0 +1,17 @@
+{
+  "name": "Spotify-mapper",
+  "version": "0.1",
+  "dependencies": {
+    "angular": "latest",
+    "jquery": "latest",
+    "bootstrap": "^3.3.6",
+    "vis": "^4.16.1"
+  },
+  "install": {
+    "path": {
+      "css": "css",
+      "less": "css",
+      "js": "js/libs"
+    }
+  }
+}

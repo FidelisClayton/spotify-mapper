@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Spotify Mapper</title>
+	<link rel="stylesheet" href="css/bootstrap/bootstrap.css">
+	<link rel="stylesheet" href="css/vis/vis.css">
+	<link rel="stylesheet" href="css/angular-loading-bar/loading-bar.css">
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body ng-app="SpotifyMapper" ng-controller="MainController">
+
+<div class="row">
+	<div class="col-md-3 side-bar">
+		<div class="form-group">
+			<form ng-submit="search(query)">
+				<label>Artist</label>
+				<div class="input-group">
+					<input type="text" class="form-control" ng-model="query">
+					<span class="input-group-btn">
+						<input type="button" class="btn btn-default" value="Search">
+					</span>
+				</div>
+
+				<input id="image-check" type="checkbox" ng-model="showImages" ng-change="startNetwork(artist, true)"> <label for="image-check">Exibir imagens? (Causa perda de desempenho)</label>
+				<input type="radio" name="layout" ng-model="layout" value="hierarchical" id="hierarchical" ng-change="startNetwork(artist, false)"> <label for="hierarchical">Hierárquico</label>
+				<input type="radio" name="layout" ng-model="layout" value="normal" id="normal"> <label for="normal">Normal</label>
+
+				<p>Duplo clique nos circulos para reproduzir uma música do artista ou banda.</p>
+			</form>
+		</div>
+
+		<div class="list-group thumb-list">
+			<a href="#" class="list-group-item" ng-repeat="artist in artists" ng-click="startNetwork(artist, true)">
+				<img ng-src="{{artist.images[0].url}}" alt="{{artist.name}}">{{artist.name}}
+			</a>
+		</div>
+	</div>
+	<div id="network"></div>
+</div>
+
+	<script src="js/libs/jquery/jquery.js"></script>
+	<script src="js/libs/angular/angular.js"></script>
+	<script src="js/libs/vis/vis.js"></script>
+	<script src="js/libs/angular-loading-bar/loading-bar.js"></script>
+
+	<script src="js/app/App.js"></script>
+	<script src="js/app/services/SpotifyService.js"></script>
+	<script src="js/app/controllers/MainController.js"></script>
+</body>
+
+</html>
