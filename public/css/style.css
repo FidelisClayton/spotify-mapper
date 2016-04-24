@@ -33,3 +33,205 @@ a {
 	background-color: #fff;
 	margin-left: 20px;
 }
+
+.form-group.is-focused .checkbox label:hover{
+	color: white !important;
+}
+
+.checkbox .checkbox-material .check {
+    border: 2px solid white;
+}
+
+.radio label .circle {
+    border: 2px solid white;
+}
+
+#sidebar-wrapper{
+	background: #0a0a0a;
+}
+
+.form-group.imagens{
+	margin-left: -10px;
+    margin-bottom: 0;
+    margin-top: 0;
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
+.form-group.imagens .check{
+    margin-right: 10px;
+}
+
+.radio span{
+	/*padding-left: 13px;*/
+}
+
+.radio label .check {
+    height: 20px;
+    width: 20px;
+}
+
+.radio label .circle {
+    height: 20px;
+    width: 20px;
+}
+
+.radio label {
+    padding-left: 25px;
+}
+
+.sidebar-nav label, .sidebar-nav span{
+	color: white;
+}
+
+.radio input[type=radio]:checked ~ .check {
+    background-color: #1ed760;
+}
+
+.radio input[type=radio]:checked ~ .circle {
+    border-color: #1ed760;
+}
+
+.checkbox input[type=checkbox]:checked + .checkbox-material .check {
+    color: #1ed760;
+    border-color: #1ed760;
+}
+
+.checkbox input[type=checkbox]:checked + .checkbox-material .check:before {
+   color: #1ed760;
+}
+
+.bottom.playing{
+	height: 100px;
+    bottom: 0;
+    position: absolute;
+    width: 250px;
+    border-top: 1px solid #151515;
+}
+
+.playing .image img{
+	width: 60px;
+    height: 60px;
+    border-radius: 100px;
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+.playing .image{
+	width: 100px;
+	height: 100px;
+	overflow: hidden;
+	float: left;
+}
+
+#menu-toggle{
+	margin-right: 10px;
+}
+
+div.complete{
+	position: absolute;
+    z-index: 1001;
+    background-color: black;
+    max-height: 200px;
+    overflow-y: overlay;
+    overflow-x: hidden;
+}
+
+.complete a{
+	color: white;
+}
+
+div.description label{
+	color: white;
+}
+
+
+
+div.description{
+	float: left;
+    width: 150px;
+    padding-top: 10px;
+}
+
+.description .name{
+	margin-bottom: 0px;
+	font-size: 10pt;
+}
+
+.description .artist, .description .album{
+	font-size: 8pt;
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+a.github{
+    position: absolute !important;
+    z-index: 1002 !important;
+    right: 20px !important;
+    bottom: 20px !important;
+    background-color: black !important;
+}
+
+a.github i{
+	font-size: 45px;
+    margin-top: 5px;
+    color: #1ed760;
+}
+
+div.tracks{
+    position: absolute;
+    z-index: 2000;
+    bottom: 0;
+    right: 0;
+    height: 100px;
+    left: 250px;
+    width: 300px;
+}
+
+.track .image{
+	width: 60px;
+	height: 60px;
+	overflow: hidden;
+}
+
+.track{
+	display: block;
+    width: 100%;
+    margin-bottom: 2px;
+    cursor: pointer;
+}
+
+.track label{
+	text-align: center;
+	margin-top: 0;
+	margin-bottom: 0;
+	padding: 0;
+}
+
+div.tracks{
+	position: absolute;
+	bottom: 105px;
+	height: 250px;
+	left: 0;
+	overflow-y: overlay;
+	overflow-x: hidden;
+}
+
+.tracks .list-group .track img{
+	width: 40px;
+	height: 40px;
+	border-radius: 100px;
+	float: left;
+}
+
+.tracks .track .track-name{
+	float: left;
+	width: 150px;
+	text-align: left;
+	padding-left: 15px;
+}
+
+a.list-group-item.track{
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
