@@ -1,3 +1,4 @@
+(function(){
 	"use strict";
 
 	angular.module('SpotifyMapper').service('SpotifyService', function($http){
@@ -13,3 +14,5 @@
 			return $http.get('https://api.spotify.com/v1/artists/' + id + '/top-tracks?country=SE')
 		};
 	});
+
+})();

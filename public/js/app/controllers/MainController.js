@@ -1,5 +1,6 @@
+(function(){
 	"use strict";
-
+	
 	angular.module('SpotifyMapper').controller('MainController', function($scope, SpotifyService){
 		var nodeIds, shadowState, nodesArray, nodes, edgesArray, edges, network;
 		var audioObject = new Audio();
@@ -169,3 +170,4 @@
 			};
 	    }
 	});
+})();
