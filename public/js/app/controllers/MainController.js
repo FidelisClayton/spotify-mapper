@@ -1,33 +1,39 @@
-(function(){
+(()=>{
 	"use strict";
 	
-	angular.module('SpotifyMapper').controller('MainController', function($scope, SpotifyService, Spotify, $cookies){
+	angular.module('SpotifyMapper').controller('MainController', MainController);
+
+	MainController.$inject = ['$scope', 'SpotifyService', 'Spotify', '$cookies'];
+
+	function MainController($scope, SpotifyService, Spotify, $cookies){
 		var nodeIds, shadowState, nodesArray, nodes, edgesArray, edges, network;
 		var audioObject = new Audio();
+		var playlistArtists = [];
+
+		edgesArray = [];
+		nodesArray = [];
+		
+		$scope.modal = {};
+		$scope.ui = {};
+		$scope.showTutorial = true;
+		$scope.playlist = [];
+		$scope.showImages = true;
+		$scope.layout = 'hierarchical';
+
+		((test)=>{
+			console.log(test);
+		})('test');
 
 		if($cookies.get('token') != undefined){
 			if($cookies.get('user') != undefined)
 				$scope.user = JSON.parse($cookies.get('user'));
 		}
-		
-		$scope.showTutorial = true;
-		$scope.modal = {};
-		$scope.ui = {};
 
-		var playlistArtists = [];
-		$scope.playlist = [];
-
-		edgesArray = [];
-		nodesArray = [];
-
-		$scope.showImages = true;
-		$scope.layout = 'hierarchical';
-
-		$scope.hideTutorial = function(){
+		$scope.hideTutorial = () => {
 			$scope.showTutorial = false;
 		}
 
-		function artistToNode(artist){
+		var artistToNode = (artist) => {
     		var node = {
     			id: artist.id,
     			label: artist.name,
@@ -42,40 +48,40 @@
     		return node;
     	}
 
-    	$scope.login = function () {
-	      	Spotify.login().then(function (data) {
+    	$scope.login = () => {
+	      	Spotify.login().then((data) => {
 	      		$scope.token = data;
 	      		$cookies.put('token', $scope.token);
 	        	Spotify.getCurrentUser()
-	        	.then(function (data) {
+	        	.then((data)=> {
 	          		$scope.user = data;
 	          		$cookies.put('user', JSON.stringify($scope.user));
 	        	})
-	      	}, function () {
+	      	}, ()=> {
 	        	console.log('didn\'t log in');
 	      	})
 	    };
 
-		$scope.search = function(query){
-			Spotify.search(query, 'artist').then(function (data) {
+		$scope.search = (query)=> {
+			Spotify.search(query, 'artist').then((data)=> {
 			  	$scope.artists = data.artists.items;
 				$scope.artist = $scope.artists[0];
 			});
 		}
 
-		$scope.searchSimilar = function(id){
+		$scope.searchSimilar = (id)=>{
 			SpotifyService.searchSimilar(id)
-			.then(function(res){
+			.then((res)=>{
 				addSimilar(id, res.data.artists);
-			}, function(err){
+			}, (err)=>{
 				console.log(err);
 			});
 		}
 
-		$scope.playTopTrack = function(id){
+		$scope.playTopTrack = (id)=> {
 			Spotify
 			.getArtistTopTracks(id, 'BR')
-			.then(function (data) {
+			.then((data)=> {
 			    $scope.track = data.tracks[0];
 				$scope.tracks = data.tracks;
 
@@ -85,8 +91,8 @@
 			});
 		}
 
-		$scope.createPlaylist = function(playListName){
-			Array.prototype.shuffle = function() {
+		$scope.createPlaylist = (playListName)=>{
+			Array.prototype.shuffle = ()=> {
 			  	var i = this.length, j, temp;
 			  	if ( i == 0 ) return this;
 			  	while ( --i ) {
@@ -102,13 +108,13 @@
 			$scope.ui.loading = true;
 			Spotify
 			.createPlaylist($scope.user.id, { name: 'Spotify Mapper - ' + playListName})
-			.then(function (data) {
+			.then((data)=> {
 				$scope.playlistId = data.id;
 			})
-			.then(function(){
+			.then(()=>{
 				Spotify
   				.addPlaylistTracks($scope.user.id, $scope.playlistId, $scope.playlist.shuffle())
-  				.then(function (data) {
+  				.then((data)=> {
   					$scope.ui.loading = false;
   					$scope.modal.message = "Playlist criada com sucesso!";
   					$scope.showModal();
@@ -116,8 +122,8 @@
 			})
 		}
 
-		$scope.getTopTracks = function(id){
-			function existArtistInPlaylist(artist){
+		$scope.getTopTracks = (id)=>{
+			var existArtistInPlaylist = (artist)=>{
 				for (var i = 0; i < playlistArtists.length; i++) {
 					if(playlistArtists[i] === artist.id){
 						return true;
@@ -128,13 +134,13 @@
 
 			Spotify
 			.getArtistTopTracks(id, 'BR')
-			.then(function (data) {
+			.then((data)=> {
 				var tracks = data.tracks;
 
 				if(!existArtistInPlaylist(data.tracks[0].artists[0])){
 					playlistArtists.push(data.tracks[0].artists[0].id);
 
-					tracks.forEach(function(track, index){
+					tracks.forEach((track, index)=>{
 						if(index < 3){
 							$scope.playlist.push(track.uri);
 						}
@@ -143,7 +149,7 @@
 			});
 		}
 
-	    $scope.startNetwork = function(artist, reset) {
+	    $scope.startNetwork = (artist, reset)=> {
 	    	$scope.artists = [];
 	    	$scope.artist = artist;
 	    	$scope.playlist = [];
@@ -177,21 +183,21 @@
 			}
 	        network = new vis.Network(container, data, options);
 
-	        network.on("click", function (params) {
+	        network.on("click", (params) => {
 	        	if(params.nodes[0] != undefined){
 		        	$scope.searchSimilar(params.nodes[0]);
 		        	$scope.getTopTracks(params.nodes[0]);
 	        	}
 		    });
 
-		    network.on("doubleClick", function (params) {
+		    network.on("doubleClick", (params) => {
         		$scope.playTopTrack(params.nodes[0]);
     		});
 	    }
 
-	    function addSimilar(id, similar){
-	    	similar.forEach(function(artist, index){
-	    		function existArtistInPlaylist(artist){
+	    var addSimilar = (id, similar) => {
+	    	similar.forEach((artist, index) => {
+	    		var existArtistInPlaylist = (artist) => {
 					for (var i = 0; i < playlistArtists.length; i++) {
 						if(playlistArtists[i] === artist.id){
 							return true;
@@ -211,12 +217,12 @@
 
     					if(!existArtistInPlaylist(artist)){
 							Spotify.getArtistTopTracks(artist.id, 'BR')
-							.then(function (data) {
+							.then((data) => {
 								var tracks = data.tracks;
 
 								playlistArtists.push(data.tracks[0].artists[0].id);
 
-								tracks.forEach(function(track, index){
+								tracks.forEach((track, index) => {
 									if(index < 3){
 										$scope.playlist.push(track.uri);
 									}
@@ -240,7 +246,7 @@
 	    	});
 	    }
 
-	    function existsEdge(edge){
+	    var existsEdge = (edge) => {
 	    	for (var i = 0; i < edgesArray.length; i++) {
 	    		if((edgesArray[i].from == edge.from && edgesArray[i].to == edge.to) ||
 	    			(edgesArray[i].from == edge.to && edgesArray[i].to == edge.from) ||
@@ -252,7 +258,7 @@
 	    	return false;
 	    }
 
-	    function existsNode(node){
+	    var existsNode = (node) =>{
 	    	for (var i = 0; i < nodesArray.length; i++) {
 	    		if(nodesArray[i].id == node.id)
 	    			return true;
@@ -261,7 +267,7 @@
 	    	return false;
 	    }
 
-	    function setNodeEdges(node, edges){
+	    var setNodeEdges = (node, edges) => {
 	    	for (var i = 0; i < nodesArray.length; i++) {
 	    		if(node.id == nodesArray[i].id){
 	    			nodesArray[i].edges = edges;
@@ -269,7 +275,7 @@
 	    	}
 	    }
 
-	    function countNodeEdges(node){
+	    var countNodeEdges = (node) => {
 	    	for (var i = 0; i < nodesArray.length; i++) {
 	    		if(node.id == nodesArray[i].id){
 	    			return nodesArray[i].edges;
@@ -279,7 +285,7 @@
 	    	return 0;
 	    }
 
-	    function defaultOptions(){
+	    var defaultOptions = () => {
 	    	return {
 			  	nodes: {
 		  			borderWidth: 3,
@@ -327,28 +333,27 @@
 			};
 	    }
 
-	    $scope.playTrack = function(track){
+	    $scope.playTrack = (track) => {
 	    	$scope.track = track;
 	    	audioObject.pause();
 	    	audioObject = new Audio(track.preview_url);
             audioObject.play();
 	    }
 
-	    $scope.hideModalPlaylist = function(){
-	    	// $scope.enableModal = false;
+	    $scope.hideModalPlaylist = () => {
 	    	$('#modalPlaylist').modal('hide');
 	    }
 
-	    $scope.showModalPlaylist = function(){
+	    $scope.showModalPlaylist = () => {
 	    	$('#modalPlaylist').modal('show');
 	    }
 
-	    $scope.showModal = function(){
+	    $scope.showModal = () => {
 	    	$('#modal').modal('show');
 	    }
 
-	    $scope.hideModal = function(){
+	    $scope.hideModal = () => {
 	    	$('#modal').modal('hide');
 	    }
-	});
+	}
 })();
