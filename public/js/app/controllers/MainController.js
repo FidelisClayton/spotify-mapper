@@ -1,11 +1,21 @@
 (function(){
 	"use strict";
 	
-	angular.module('SpotifyMapper').controller('MainController', function($scope, SpotifyService){
+	angular.module('SpotifyMapper').controller('MainController', function($scope, SpotifyService, Spotify, $cookies){
 		var nodeIds, shadowState, nodesArray, nodes, edgesArray, edges, network;
 		var audioObject = new Audio();
 
+		if($cookies.get('token') != undefined){
+			if($cookies.get('user') != undefined)
+				$scope.user = JSON.parse($cookies.get('user'));
+		}
+		
 		$scope.showTutorial = true;
+		$scope.modal = {};
+		$scope.ui = {};
+
+		var playlistArtists = [];
+		$scope.playlist = [];
 
 		edgesArray = [];
 		nodesArray = [];
@@ -32,13 +42,24 @@
     		return node;
     	}
 
+    	$scope.login = function () {
+	      	Spotify.login().then(function (data) {
+	      		$scope.token = data;
+	      		$cookies.put('token', $scope.token);
+	        	Spotify.getCurrentUser()
+	        	.then(function (data) {
+	          		$scope.user = data;
+	          		$cookies.put('user', JSON.stringify($scope.user));
+	        	})
+	      	}, function () {
+	        	console.log('didn\'t log in');
+	      	})
+	    };
+
 		$scope.search = function(query){
-			SpotifyService.searchArtist(query)
-			.then(function(res){
-				$scope.artists = res.data.artists.items;
+			Spotify.search(query, 'artist').then(function (data) {
+			  	$scope.artists = data.artists.items;
 				$scope.artist = $scope.artists[0];
-			}, function(err){
-				console.log(err);
 			});
 		}
 
@@ -52,22 +73,83 @@
 		}
 
 		$scope.playTopTrack = function(id){
-			SpotifyService.searchTopTracks(id)
-			.then(function(res){
-				$scope.track = res.data.tracks[0];
-				$scope.tracks = res.data.tracks;
+			Spotify
+			.getArtistTopTracks(id, 'BR')
+			.then(function (data) {
+			    $scope.track = data.tracks[0];
+				$scope.tracks = data.tracks;
 
 				audioObject.pause();
-				audioObject = new Audio(res.data.tracks[0].preview_url);
+				audioObject = new Audio(data.tracks[0].preview_url);
                 audioObject.play();
-			}, function(err){
-				console.log(err);
+			});
+		}
+
+		$scope.createPlaylist = function(playListName){
+			Array.prototype.shuffle = function() {
+			  	var i = this.length, j, temp;
+			  	if ( i == 0 ) return this;
+			  	while ( --i ) {
+			     	j = Math.floor( Math.random() * ( i + 1 ) );
+			     	temp = this[i];
+			     	this[i] = this[j];
+			     	this[j] = temp;
+			  	}
+			  	return this;
+			}
+
+			$scope.hideModalPlaylist();
+			$scope.ui.loading = true;
+			Spotify
+			.createPlaylist($scope.user.id, { name: 'Spotify Mapper - ' + playListName})
+			.then(function (data) {
+				$scope.playlistId = data.id;
+			})
+			.then(function(){
+				Spotify
+  				.addPlaylistTracks($scope.user.id, $scope.playlistId, $scope.playlist.shuffle())
+  				.then(function (data) {
+  					$scope.ui.loading = false;
+  					$scope.modal.message = "Playlist criada com sucesso!";
+  					$scope.showModal();
+  				});
+			})
+		}
+
+		$scope.getTopTracks = function(id){
+			function existArtistInPlaylist(artist){
+				for (var i = 0; i < playlistArtists.length; i++) {
+					if(playlistArtists[i] === artist.id){
+						return true;
+					}
+				}
+				return false;
+			}
+
+			Spotify
+			.getArtistTopTracks(id, 'BR')
+			.then(function (data) {
+				var tracks = data.tracks;
+
+				if(!existArtistInPlaylist(data.tracks[0].artists[0])){
+					playlistArtists.push(data.tracks[0].artists[0].id);
+
+					tracks.forEach(function(track, index){
+						if(index < 3){
+							$scope.playlist.push(track.uri);
+						}
+					});
+				}
 			});
 		}
 
 	    $scope.startNetwork = function(artist, reset) {
 	    	$scope.artists = [];
 	    	$scope.artist = artist;
+	    	$scope.playlist = [];
+
+	    	$scope.playlistName = $scope.artist.name;
+
 	    	if(reset){
 	    		nodesArray = [];
 	    		edgesArray = [];
@@ -77,8 +159,6 @@
 	    	}
 
 	        shadowState = false;
-
-	        
 
 	        var container = document.getElementById('network');
 	        var data = {
@@ -98,8 +178,10 @@
 	        network = new vis.Network(container, data, options);
 
 	        network.on("click", function (params) {
-	        	if(params.nodes[0] != undefined)
+	        	if(params.nodes[0] != undefined){
 		        	$scope.searchSimilar(params.nodes[0]);
+		        	$scope.getTopTracks(params.nodes[0]);
+	        	}
 		    });
 
 		    network.on("doubleClick", function (params) {
@@ -109,13 +191,39 @@
 
 	    function addSimilar(id, similar){
 	    	similar.forEach(function(artist, index){
+	    		function existArtistInPlaylist(artist){
+					for (var i = 0; i < playlistArtists.length; i++) {
+						if(playlistArtists[i] === artist.id){
+							return true;
+						}
+					}
+
+					return false;
+				}
+
     			var edge = {from: id, to: artist.id};
     			var node = artistToNode(artist);
-    			
+
     			if(index < 3){
 	    			try{	    		
 	    				nodesArray.push(node);
 	    				nodes.add(node);
+
+    					if(!existArtistInPlaylist(artist)){
+							Spotify.getArtistTopTracks(artist.id, 'BR')
+							.then(function (data) {
+								var tracks = data.tracks;
+
+								playlistArtists.push(data.tracks[0].artists[0].id);
+
+								tracks.forEach(function(track, index){
+									if(index < 3){
+										$scope.playlist.push(track.uri);
+									}
+								});
+							});
+						}
+
 		    			if(!existsEdge(edge) && existsNode(node)){
 		    				edgesArray.push(edge);
 		    				edges.add(edge);
@@ -151,6 +259,24 @@
 	    	}
 
 	    	return false;
+	    }
+
+	    function setNodeEdges(node, edges){
+	    	for (var i = 0; i < nodesArray.length; i++) {
+	    		if(node.id == nodesArray[i].id){
+	    			nodesArray[i].edges = edges;
+	    		}
+	    	}
+	    }
+
+	    function countNodeEdges(node){
+	    	for (var i = 0; i < nodesArray.length; i++) {
+	    		if(node.id == nodesArray[i].id){
+	    			return nodesArray[i].edges;
+	    		}
+	    	}
+
+	    	return 0;
 	    }
 
 	    function defaultOptions(){
@@ -206,7 +332,23 @@
 	    	audioObject.pause();
 	    	audioObject = new Audio(track.preview_url);
             audioObject.play();
-            console.log(track);
+	    }
+
+	    $scope.hideModalPlaylist = function(){
+	    	// $scope.enableModal = false;
+	    	$('#modalPlaylist').modal('hide');
+	    }
+
+	    $scope.showModalPlaylist = function(){
+	    	$('#modalPlaylist').modal('show');
+	    }
+
+	    $scope.showModal = function(){
+	    	$('#modal').modal('show');
+	    }
+
+	    $scope.hideModal = function(){
+	    	$('#modal').modal('hide');
 	    }
 	});
 })();
