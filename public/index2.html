@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Spotify Mapper</title>
+
+	<link rel="stylesheet" href="css/bootstrap/bootstrap.css">
+	<link rel="stylesheet" href="css/bootstrap-material-design/bootstrap-material-design.css">
+	<link rel="stylesheet" href="css/vis/vis.css">
+	<link rel="stylesheet" href="css/angular-loading-bar/loading-bar.css">
+	<link rel="stylesheet" href="css/angucomplete-alt/angucomplete-alt.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/sidebar.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+</head>
+<body ng-app="SpotifyMapper" ng-controller="MainController">
+	<div class="navbar navbar-default">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				</button>
+
+				<a class="navbar-brand" href="javascript:void(0)">
+					<span id="menu-toggle" class="glyphicon glyphicon-menu-hamburger"></span>
+					Spotify Mapper
+				</a>
+			</div>
+			<div class="navbar-collapse collapse navbar-responsive-collapse">
+				<form class="navbar-form navbar-left" ng-submit="search(query)">
+					<div class="form-group">
+						<input type="text" id="addon2" class="form-control" autocomplete="off" placeholder="Artista ou banda" ng-model="query">
+						<div class="complete">
+							<div class="list-group thumb-list">
+								<a href="#" class="list-group-item" ng-repeat="artist in artists" ng-click="startNetwork(artist, true)">
+									<img ng-src="{{artist.images[0].url}}" alt="{{artist.name}}">{{artist.name}}
+								</a>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<div id="sidebar-wrapper">
+  		<ul class="sidebar-nav">
+    		<li>
+    			<div class="form-group imagens">
+  					<div class="checkbox">
+    					<label>
+      						<input type="checkbox" ng-model="showImages" ng-change="startNetwork(artist, true)"> 
+      						<span>Imagens</span>
+    					</label>
+  					</div>
+				</div>
+
+				<div class="radio">
+					<label>
+						<input type="radio" name="layout" value="hierarchical" ng-model="layout" ng-change="startNetwork(artist, true)">
+						Hierárquico
+					</label>
+				</div>
+				<div class="radio">
+					<label>
+						<input type="radio" name="layout" value="normal" ng-model="layout">
+						Normal
+					</label>
+				</div>
+    		</li>
+  		</ul>
+
+  		<div class="tracks">
+  			<div class="list-group">
+				<a class="list-group-item track" ng-repeat="track in tracks" ng-click="playTrack(track)">
+					<img ng-src="{{track.album.images[0].url}}" alt="{{track.name}}">
+					<div class="row">
+						<label class="track-name">{{track.name}}</label>
+					</div>
+				</a>
+			</div>
+  		</div>
+
+  		<div class="bottom playing" ng-show="track != null || track != undefined">
+    		<div class="image">
+    			<a href="{{track.album.external_urls.spotify}}" target="blank">
+    				<img ng-src="{{track.album.images[0].url}}" alt="">
+				</a>
+    		</div>
+    		<div class="description">
+    			<div class="row">
+    				<label class="name">{{track.name}}</label>
+    			</div>
+    			<div class="row">
+    				<label class="artist">{{track.album.name}}</label>
+    			</div>
+    			<div class="row">
+    				<label class="album">{{track.artists[0].name}}</label>
+    			</div>
+    		</div>
+		</div>
+	</div>
+
+	<a href="https://github.com/FidelisClayton/spotify-mapper" target="blank" class="btn btn-default btn-fab github">
+		<i class="fa fa-github" aria-hidden="true"></i>
+	</a>
+
+	<div id="network"></div>
+
+	<script src="js/libs/jquery/jquery.js"></script>
+	<script src="js/libs/bootstrap-material-design/material.js"></script>
+	<script src="js/libs/bootstrap-material-design/ripples.js"></script>
+	
+	<script>
+	    $.material.init();
+	    $("#sidebar-wrapper").toggleClass("active");
+	  	$("#menu-close").click(function(e) {
+    		e.preventDefault();
+    		$("#sidebar-wrapper").toggleClass("active");
+  		});
+  		$("#menu-toggle").click(function(e) {
+    		e.preventDefault();
+    		$("#sidebar-wrapper").toggleClass("active");
+  		});
+	</script>
+	<script src="js/libs/angular/angular.js"></script>
+	<script src="js/libs/vis/vis.js"></script>
+	<script src="js/libs/angular-loading-bar/loading-bar.js"></script>
+	<script src="js/libs/angucomplete-alt/angucomplete-alt.js"></script>
+
+	<script src="js/app/spotify-mapper.js"></script>
+	<script src="js/app/services/SpotifyService.js"></script>
+	<script src="js/app/controllers/MainController.js"></script>
+</body>
+</html>

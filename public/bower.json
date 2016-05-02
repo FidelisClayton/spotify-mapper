@@ -5,7 +5,9 @@
     "angular": "latest",
     "jquery": "latest",
     "bootstrap": "^3.3.6",
-    "vis": "^4.16.1"
+    "vis": "^4.16.1",
+    "bootstrap-material-design": "^0.5.9",
+    "angucomplete-alt": "^2.4.1"
   },
   "install": {
     "path": {
