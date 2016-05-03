@@ -5,11 +5,17 @@
 		var nodeIds, shadowState, nodesArray, nodes, edgesArray, edges, network;
 		var audioObject = new Audio();
 
+		$scope.showTutorial = true;
+
 		edgesArray = [];
 		nodesArray = [];
 
 		$scope.showImages = false;
 		$scope.layout = 'normal';
+
+		$scope.hideTutorial = function(){
+			$scope.showTutorial = false;
+		}
 
 		function artistToNode(artist){
     		var node = {
@@ -106,10 +112,9 @@
     			var edge = {from: id, to: artist.id};
     			var node = artistToNode(artist);
     			
-    			if(index < 4){
+    			if(index < 3){
 	    			try{	    		
 	    				nodesArray.push(node);
-
 	    				nodes.add(node);
 		    			if(!existsEdge(edge) && existsNode(node)){
 		    				edgesArray.push(edge);

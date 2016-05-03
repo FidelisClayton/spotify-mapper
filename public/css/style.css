@@ -235,3 +235,11 @@ a.list-group-item.track{
     padding-top: 5px;
     padding-bottom: 5px;
 }
+
+div.tutorial{
+    width: 280px;
+    position: absolute;
+    z-index: 2000;
+    right: 20px;
+    top: 65px;
+}
