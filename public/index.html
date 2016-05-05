@@ -32,10 +32,10 @@
 				<form class="navbar-form navbar-left" ng-submit="search(query)">
 					<div class="form-group">
 						<input type="text" id="addon2" class="form-control" autocomplete="off" placeholder="Artista ou banda" ng-model="query">
-						<div class="complete" ng-if="artists != null">
+						<div class="complete" ng-if="artists != null" ng-cloak>
 							<div class="list-group thumb-list">
 								<a href="#" class="list-group-item" ng-repeat="artist in artists" ng-click="startNetwork(artist, true)">
-									<img ng-src="{{artist.images[0].url}}" alt="{{artist.name}}">{{artist.name}}
+									<img ng-src="{{artist.images[artist.images.length -2].url}}" alt="{{artist.name}}">{{artist.name}}
 								</a>
 							</div>
 						</div>
@@ -72,10 +72,10 @@
     		</li>
   		</ul>
 
-  		<div class="tracks" ng-if="tracks != undefined || tracks != null">
+  		<div class="tracks" ng-if="tracks != undefined || tracks != null" ng-cloak>
   			<div class="list-group">
 				<a class="list-group-item track" ng-repeat="track in tracks" ng-click="playTrack(track)">
-					<img ng-src="{{track.album.images[0].url}}" alt="{{track.name}}">
+					<img ng-src="{{track.album.images[artist.images.length -2].url}}" alt="{{track.name}}">
 					<div class="row">
 						<label class="track-name">{{track.name}}</label>
 					</div>
@@ -83,10 +83,10 @@
 			</div>
   		</div>
 
-  		<div class="bottom playing" ng-show="track != null || track != undefined">
+  		<div class="bottom playing" ng-show="track != null || track != undefined" ng-cloak>
     		<div class="image">
     			<a href="{{track.album.external_urls.spotify}}" target="blank">
-    				<img ng-src="{{track.album.images[0].url}}" alt="">
+    				<img ng-src="{{track.album.images[artist.images.length -2].url}}" alt="">
 				</a>
     		</div>
     		<div class="description">
@@ -97,7 +97,7 @@
     				<label class="artist">{{track.album.name}}</label>
     			</div>
     			<div class="row">
-    				<label class="album">{{track.artists[0].name}}</label>
+    				<label class="album">{{track.artists[artist.images.length -2].name}}</label>
     			</div>
     		</div>
 		</div>

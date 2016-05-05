@@ -10,8 +10,8 @@
 		edgesArray = [];
 		nodesArray = [];
 
-		$scope.showImages = false;
-		$scope.layout = 'normal';
+		$scope.showImages = true;
+		$scope.layout = 'hierarchical';
 
 		$scope.hideTutorial = function(){
 			$scope.showTutorial = false;
@@ -26,7 +26,7 @@
 
     		if($scope.showImages){
     			node.shape = 'circularImage';
-    			node.image = artist.images[0].url;
+    			node.image = artist.images[artist.images.length -2].url;
     		}
 
     		return node;
