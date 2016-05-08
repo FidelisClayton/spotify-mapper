@@ -14,6 +14,9 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
 </head>
 <body ng-app="SpotifyMapper" ng-controller="MainController">
+	<div class="loading" ng-if="ui.loading"></div>
+	<div class="mask" ng-if="ui.loading"></div>
+
 	<div class="navbar navbar-default">
 		<div class="container-fluid">
 			<div class="navbar-header">
@@ -23,15 +26,16 @@
 				<span class="icon-bar"></span>
 				</button>
 
-				<a class="navbar-brand" href="javascript:void(0)">
+				<a class="navbar-brand" href="">
 					<span id="menu-toggle" class="glyphicon glyphicon-menu-hamburger"></span>
 					Spotify Mapper
 				</a>
 			</div>
+
 			<div class="navbar-collapse collapse navbar-responsive-collapse">
 				<form class="navbar-form navbar-left" ng-submit="search(query)">
 					<div class="form-group">
-						<input type="text" id="addon2" class="form-control" autocomplete="off" placeholder="Artista ou banda" ng-model="query">
+						<input type="text" id="addon2" class="form-control" autocomplete="off" placeholder="Artista ou banda" ng-change="search(query)" ng-model="query">
 						<div class="complete" ng-if="artists != null" ng-cloak>
 							<div class="list-group thumb-list">
 								<a href="#" class="list-group-item" ng-repeat="artist in artists" ng-click="startNetwork(artist, true)">
@@ -41,7 +45,22 @@
 						</div>
 					</div>
 				</form>
+
+				<ul class="nav navbar-nav navbar-right">
+                	<li ng-if="user == undefined || user == null">
+                		<a href="" ng-click="login()">Login Spotify</a>
+            		</li>
+					
+					<li ng-if="user != undefined || user != null" ng-click="showModalPlaylist()">
+						<a href="" style="color:#4caf50"><i class="fa fa-spotify" aria-hidden="true"></i> Gerar playlist</a>
+					</li>
+
+            		<li ng-if="user != undefined || user != null">
+                		<a href="">{{user.display_name}}</a>
+            		</li>
+              	</ul>
 			</div>
+
 		</div>
 	</div>
 	
@@ -103,25 +122,68 @@
 		</div>
 	</div>
 
-	<div class="well infobox tutorial" ng-if="showTutorial">
-		<p>1. Pesquise um Artista ou Banda</p>
-		<p>2. Clique no circulo</p>
-		<p>3. Clique duas vezes em um circulo para reproduzir uma música do artista.</p>
-		<button class="btn btn-primary" ng-click="hideTutorial()">Fechar</button>
+	<div class="content">
+		<div class="well infobox tutorial" ng-if="showTutorial">
+			<p>1. Pesquise um Artista ou Banda</p>
+			<p>2. Clique no circulo</p>
+			<p>3. Clique duas vezes em um circulo para reproduzir uma música do artista.</p>
+			<p><strong>Faça login com o spotify para obter uma melhor experiência.</strong></p>
+			<button class="btn btn-primary" ng-click="hideTutorial()">Fechar</button>
+		</div>
+
+		<a href="https://github.com/FidelisClayton/spotify-mapper" target="blank" class="btn btn-default btn-fab github">
+			<i class="fa fa-github" aria-hidden="true"></i>
+		</a>
+
+		<div id="network"></div>
 	</div>
 
-	<a href="https://github.com/FidelisClayton/spotify-mapper" target="blank" class="btn btn-default btn-fab github">
-		<i class="fa fa-github" aria-hidden="true"></i>
-	</a>
+	<div id="modalPlaylist" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="hideModalPlaylist()">×</button>
+					<h4 class="modal-title">Gerar playlist</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="">Nome da playlist</label>
+						<input type="text" class="form-control" ng-model="playlistName">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" ng-click="hideModalPlaylist()">Cancelar</button>
+					<button type="button" class="btn btn-primary" ng-click="createPlaylist(playlistName)">Salvar</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
-	<div id="network"></div>
+	<div id="modal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="hideModalPlaylist()">×</button>
+					<h4 class="modal-title">Mensagem</h4>
+				</div>
+				<div class="modal-body">
+					<h2>{{modal.message}}</h2>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" ng-click="hideModal">Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<script src="js/libs/jquery/jquery.js"></script>
+	<script src="js/libs/bootstrap/bootstrap.js"></script>
 	<script src="js/libs/bootstrap-material-design/material.js"></script>
 	<script src="js/libs/bootstrap-material-design/ripples.js"></script>
 	
 	<script>
 	    $.material.init();
+
 	    $("#sidebar-wrapper").toggleClass("active");
 	  	$("#menu-close").click(function(e) {
     		e.preventDefault();
@@ -136,6 +198,8 @@
 	<script src="js/libs/vis/vis.js"></script>
 	<script src="js/libs/angular-loading-bar/loading-bar.js"></script>
 	<script src="js/libs/angucomplete-alt/angucomplete-alt.js"></script>
+	<script src="js/libs/angular-spotify/angular-spotify.min.js"></script>
+	<script src="js/libs/angular-cookies/angular-cookies.js"></script>
 
 	<script src="js/app/spotify-mapper.js"></script>
 	<script src="js/app/services/SpotifyService.js"></script>
