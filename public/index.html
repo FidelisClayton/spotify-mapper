@@ -1,208 +1,217 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>Spotify Mapper</title>
+    <meta charset="UTF-8">
+    <title>Spotify Mapper</title>
 
-	<link rel="stylesheet" href="css/bootstrap/bootstrap.css">
-	<link rel="stylesheet" href="css/bootstrap-material-design/bootstrap-material-design.css">
-	<link rel="stylesheet" href="css/vis/vis.css">
-	<link rel="stylesheet" href="css/angular-loading-bar/loading-bar.css">
-	<link rel="stylesheet" href="css/angucomplete-alt/angucomplete-alt.css">
-	<link rel="stylesheet" href="css/style.css">
-	<link rel="stylesheet" href="css/sidebar.css">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap-material-design/bootstrap-material-design.css">
+    <link rel="stylesheet" href="css/vis/vis.css">
+    <link rel="stylesheet" href="css/angular-loading-bar/loading-bar.css">
+    <link rel="stylesheet" href="css/angucomplete-alt/angucomplete-alt.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
 </head>
 <body ng-app="SpotifyMapper" ng-controller="MainController">
-	<div class="loading" ng-if="ui.loading"></div>
-	<div class="mask" ng-if="ui.loading"></div>
+    <div class="loading" ng-if="ui.loading"></div>
+    <div class="mask" ng-if="ui.loading"></div>
 
-	<div class="navbar navbar-default">
-		<div class="container-fluid">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				</button>
+    <div class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                </button>
 
-				<a class="navbar-brand" href="">
-					<span id="menu-toggle" class="glyphicon glyphicon-menu-hamburger"></span>
-					Spotify Mapper
-				</a>
-			</div>
+                <a class="navbar-brand" href="">
+                    <span id="menu-toggle" class="glyphicon glyphicon-menu-hamburger"></span>
+                    Spotify Mapper
+                </a>
+            </div>
 
-			<div class="navbar-collapse collapse navbar-responsive-collapse">
-				<form class="navbar-form navbar-left" ng-submit="search(query)">
-					<div class="form-group">
-						<input type="text" id="addon2" class="form-control" autocomplete="off" placeholder="Artista ou banda" ng-change="search(query)" ng-model="query">
-						<div class="complete" ng-if="artists != null" ng-cloak>
-							<div class="list-group thumb-list">
-								<a href="#" class="list-group-item" ng-repeat="artist in artists" ng-click="startNetwork(artist, true)">
-									<img ng-src="{{artist.images[artist.images.length -2].url}}" alt="{{artist.name}}">{{artist.name}}
-								</a>
-							</div>
-						</div>
-					</div>
-				</form>
+            <div class="navbar-collapse collapse navbar-responsive-collapse">
+                <form class="navbar-form navbar-left" ng-submit="search(query)">
+                    <div class="form-group">
+                        <input type="text" id="addon2" class="form-control" autocomplete="off" placeholder="Artista ou banda" ng-change="search(query)" ng-model="query">
+                        <div class="complete" ng-if="artists != null" ng-cloak>
+                            <div class="list-group thumb-list">
+                                <a href="#" class="list-group-item" ng-repeat="artist in artists" ng-click="startNetwork(artist, true)">
+                                    <img ng-src="{{artist.images[artist.images.length -2].url}}" alt="{{artist.name}}">{{artist.name}}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
 
-				<ul class="nav navbar-nav navbar-right">
-                	<li ng-if="user == undefined || user == null">
-                		<a href="" ng-click="login()">Login Spotify</a>
-            		</li>
-					
-					<li ng-if="user != undefined || user != null" ng-click="showModalPlaylist()">
-						<a href="" style="color:#4caf50"><i class="fa fa-spotify" aria-hidden="true"></i> Gerar playlist</a>
-					</li>
+                <ul class="nav navbar-nav navbar-right">
+                    <li ng-if="user == undefined || user == null">
+                        <a href="" ng-click="login()">Login Spotify</a>
+                    </li>
+                    
+                    <li ng-if="user != undefined || user != null" ng-click="showModalPlaylist()">
+                        <a href="" style="color:#4caf50"><i class="fa fa-spotify" aria-hidden="true"></i> Gerar playlist</a>
+                    </li>
 
-            		<li ng-if="user != undefined || user != null">
-                		<a href="">{{user.display_name}}</a>
-            		</li>
-              	</ul>
-			</div>
+                    <li ng-if="user != undefined || user != null">
+                        <a href="">{{user.display_name}}</a>
+                    </li>
+                </ul>
+            </div>
 
-		</div>
-	</div>
-	
-	<div id="sidebar-wrapper">
-  		<ul class="sidebar-nav">
-    		<li>
-    			<div class="form-group imagens">
-  					<div class="checkbox">
-    					<label>
-      						<input type="checkbox" ng-model="showImages" ng-change="startNetwork(artist, true)"> 
-      						<span>Imagens</span>
-    					</label>
-  					</div>
-				</div>
+        </div>
+    </div>
+    
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li>
+                <div class="form-group imagens">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="showImages" ng-change="startNetwork(artist, true)"> 
+                            <span>Imagens</span>
+                        </label>
+                    </div>
+                </div>
 
-				<div class="radio">
-					<label>
-						<input type="radio" name="layout" value="hierarchical" ng-model="layout" ng-change="startNetwork(artist, true)">
-						Hierárquico
-					</label>
-				</div>
-				<div class="radio">
-					<label>
-						<input type="radio" name="layout" value="normal" ng-model="layout">
-						Normal
-					</label>
-				</div>
-    		</li>
-  		</ul>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="layout" value="hierarchical" ng-model="layout" ng-change="startNetwork(artist, true)">
+                        Hierárquico
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="layout" value="normal" ng-model="layout">
+                        Normal
+                    </label>
+                </div>
+            </li>
+        </ul>
 
-  		<div class="tracks" ng-if="tracks != undefined || tracks != null" ng-cloak>
-  			<div class="list-group">
-				<a class="list-group-item track" ng-repeat="track in tracks" ng-click="playTrack(track)">
-					<img ng-src="{{track.album.images[artist.images.length -2].url}}" alt="{{track.name}}">
-					<div class="row">
-						<label class="track-name">{{track.name}}</label>
-					</div>
-				</a>
-			</div>
-  		</div>
+        <div class="tracks" ng-if="tracks != undefined || tracks != null" ng-cloak>
+            <div class="list-group">
+                <a class="list-group-item track" ng-repeat="track in tracks" ng-click="playTrack(track)">
+                    <img ng-src="{{track.album.images[artist.images.length -2].url}}" alt="{{track.name}}">
+                    <div class="row">
+                        <label class="track-name">{{track.name}}</label>
+                    </div>
+                </a>
+            </div>
+        </div>
 
-  		<div class="bottom playing" ng-show="track != null || track != undefined" ng-cloak>
-    		<div class="image">
-    			<a href="{{track.album.external_urls.spotify}}" target="blank">
-    				<img ng-src="{{track.album.images[artist.images.length -2].url}}" alt="">
-				</a>
-    		</div>
-    		<div class="description">
-    			<div class="row">
-    				<label class="name">{{track.name}}</label>
-    			</div>
-    			<div class="row">
-    				<label class="artist">{{track.album.name}}</label>
-    			</div>
-    			<div class="row">
-    				<label class="album">{{track.artists[artist.images.length -2].name}}</label>
-    			</div>
-    		</div>
-		</div>
-	</div>
+        <div class="bottom playing" ng-show="track != null || track != undefined" ng-cloak>
+            <div class="image">
+                <a href="{{track.album.external_urls.spotify}}" target="blank">
+                    <img ng-src="{{track.album.images[artist.images.length -2].url}}" alt="">
+                </a>
+            </div>
+            <div class="description">
+                <div class="row">
+                    <label class="name">{{track.name}}</label>
+                </div>
+                <div class="row">
+                    <label class="artist">{{track.album.name}}</label>
+                </div>
+                <div class="row">
+                    <label class="album">{{track.artists[artist.images.length -2].name}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<div class="content">
-		<div class="well infobox tutorial" ng-if="showTutorial">
-			<p>1. Pesquise um Artista ou Banda</p>
-			<p>2. Clique no circulo</p>
-			<p>3. Clique duas vezes em um circulo para reproduzir uma música do artista.</p>
-			<p><strong>Faça login com o spotify para obter uma melhor experiência.</strong></p>
-			<button class="btn btn-primary" ng-click="hideTutorial()">Fechar</button>
-		</div>
+    <div class="content">
+        <div class="well infobox tutorial" ng-if="showTutorial">
+            <p>1. Pesquise um Artista ou Banda</p>
+            <p>2. Clique no circulo</p>
+            <p>3. Clique duas vezes em um circulo para reproduzir uma música do artista.</p>
+            <p><strong>Faça login com o spotify para obter uma melhor experiência.</strong></p>
+            <button class="btn btn-primary" ng-click="hideTutorial()">Fechar</button>
+        </div>
 
-		<a href="https://github.com/FidelisClayton/spotify-mapper" target="blank" class="btn btn-default btn-fab github">
-			<i class="fa fa-github" aria-hidden="true"></i>
-		</a>
+        <a href="https://github.com/FidelisClayton/spotify-mapper" target="blank" class="btn btn-default btn-fab github">
+            <i class="fa fa-github" aria-hidden="true"></i>
+        </a>
 
-		<div id="network"></div>
-	</div>
+        <div id="network"></div>
 
-	<div id="modalPlaylist" class="modal fade">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="hideModalPlaylist()">×</button>
-					<h4 class="modal-title">Gerar playlist</h4>
-				</div>
-				<div class="modal-body">
-					<div class="form-group">
-						<label for="">Nome da playlist</label>
-						<input type="text" class="form-control" ng-model="playlistName">
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" ng-click="hideModalPlaylist()">Cancelar</button>
-					<button type="button" class="btn btn-primary" ng-click="createPlaylist(playlistName)">Salvar</button>
-				</div>
-			</div>
-		</div>
-	</div>
+        <div id="player">
+            <div class="play-pause">
+                <span ng-show="!!track">
+                    <i ng-show="!playing" class="fa fa-play-circle-o" ng-click="continueTrack()"> </i>
+                    <i ng-show="playing" class="fa fa-pause-circle-o" ng-click="stopTrack()"> </i>
+                </span>
+            </div>
+        </div>
+    </div>
 
-	<div id="modal" class="modal fade">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="hideModalPlaylist()">×</button>
-					<h4 class="modal-title">Mensagem</h4>
-				</div>
-				<div class="modal-body">
-					<h2>{{modal.message}}</h2>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" ng-click="hideModal">Fechar</button>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div id="modalPlaylist" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="hideModalPlaylist()">×</button>
+                    <h4 class="modal-title">Gerar playlist</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="">Nome da playlist</label>
+                        <input type="text" class="form-control" ng-model="playlistName">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="hideModalPlaylist()">Cancelar</button>
+                    <button type="button" class="btn btn-primary" ng-click="createPlaylist(playlistName)">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<script src="js/libs/jquery/jquery.js"></script>
-	<script src="js/libs/bootstrap/bootstrap.js"></script>
-	<script src="js/libs/bootstrap-material-design/material.js"></script>
-	<script src="js/libs/bootstrap-material-design/ripples.js"></script>
-	
-	<script>
-	    $.material.init();
+    <div id="modal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="hideModalPlaylist()">×</button>
+                    <h4 class="modal-title">Mensagem</h4>
+                </div>
+                <div class="modal-body">
+                    <h2>{{modal.message}}</h2>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="hideModal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	    $("#sidebar-wrapper").toggleClass("active");
-	  	$("#menu-close").click(function(e) {
-    		e.preventDefault();
-    		$("#sidebar-wrapper").toggleClass("active");
-  		});
-  		$("#menu-toggle").click(function(e) {
-    		e.preventDefault();
-    		$("#sidebar-wrapper").toggleClass("active");
-  		});
-	</script>
-	<script src="js/libs/angular/angular.js"></script>
-	<script src="js/libs/vis/vis.js"></script>
-	<script src="js/libs/angular-loading-bar/loading-bar.js"></script>
-	<script src="js/libs/angucomplete-alt/angucomplete-alt.js"></script>
-	<script src="js/libs/angular-spotify/angular-spotify.min.js"></script>
-	<script src="js/libs/angular-cookies/angular-cookies.js"></script>
+    <script src="js/libs/jquery/jquery.js"></script>
+    <script src="js/libs/bootstrap/bootstrap.js"></script>
+    <script src="js/libs/bootstrap-material-design/material.js"></script>
+    <script src="js/libs/bootstrap-material-design/ripples.js"></script>
+    
+    <script>
+        $.material.init();
 
-	<script src="js/app/spotify-mapper.js"></script>
-	<script src="js/app/services/SpotifyService.js"></script>
-	<script src="js/app/controllers/MainController.js"></script>
+        $("#sidebar-wrapper").toggleClass("active");
+        $("#menu-close").click(function(e) {
+            e.preventDefault();
+            $("#sidebar-wrapper").toggleClass("active");
+        });
+        $("#menu-toggle").click(function(e) {
+            e.preventDefault();
+            $("#sidebar-wrapper").toggleClass("active");
+        });
+    </script>
+    <script src="js/libs/angular/angular.js"></script>
+    <script src="js/libs/vis/vis.js"></script>
+    <script src="js/libs/angular-loading-bar/loading-bar.js"></script>
+    <script src="js/libs/angucomplete-alt/angucomplete-alt.js"></script>
+    <script src="js/libs/angular-spotify/angular-spotify.min.js"></script>
+    <script src="js/libs/angular-cookies/angular-cookies.js"></script>
+
+    <script src="js/app/spotify-mapper.js"></script>
+    <script src="js/app/services/SpotifyService.js"></script>
+    <script src="js/app/controllers/MainController.js"></script>
 </body>
 </html>

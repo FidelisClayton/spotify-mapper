@@ -1,10 +1,10 @@
 html, body {
-  	padding: 0px;
-	margin: 0px;
-  	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  	width: 100%;
-  	height: 100%;
-  	overflow: hidden;
+    padding: 0px;
+    margin: 0px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
 
 a {
@@ -19,23 +19,23 @@ a {
 }
 
 #network{
-	width: 100%;
-	height: 100%;
-	background-color: black;
-	overflow: hidden;
-	position: absolute;
-	z-index: 0;
-	background-image: url('../images/bg.jpg');
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    overflow: hidden;
+    position: absolute;
+    z-index: 0;
+    background-image: url('../images/bg.jpg');
 }
 
 .side-bar{
-	z-index: 1;
-	background-color: #fff;
-	margin-left: 20px;
+    z-index: 1;
+    background-color: #fff;
+    margin-left: 20px;
 }
 
 .form-group.is-focused .checkbox label:hover{
-	color: white !important;
+    color: white !important;
 }
 
 .checkbox .checkbox-material .check {
@@ -47,11 +47,11 @@ a {
 }
 
 #sidebar-wrapper{
-	background: #0a0a0a;
+    background: #0a0a0a;
 }
 
 .form-group.imagens{
-	margin-left: -10px;
+    margin-left: -10px;
     margin-bottom: 0;
     margin-top: 0;
     padding-bottom: 0;
@@ -63,7 +63,7 @@ a {
 }
 
 .radio span{
-	/*padding-left: 13px;*/
+    /*padding-left: 13px;*/
 }
 
 .radio label .check {
@@ -81,7 +81,7 @@ a {
 }
 
 .sidebar-nav label, .sidebar-nav span{
-	color: white;
+    color: white;
 }
 
 .radio input[type=radio]:checked ~ .check {
@@ -102,7 +102,7 @@ a {
 }
 
 .bottom.playing{
-	height: 100px;
+    height: 100px;
     bottom: 0;
     position: absolute;
     width: 250px;
@@ -110,7 +110,7 @@ a {
 }
 
 .playing .image img{
-	width: 60px;
+    width: 60px;
     height: 60px;
     border-radius: 100px;
     margin-top: 10px;
@@ -118,18 +118,18 @@ a {
 }
 
 .playing .image{
-	width: 100px;
-	height: 100px;
-	overflow: hidden;
-	float: left;
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    float: left;
 }
 
 #menu-toggle{
-	margin-right: 10px;
+    margin-right: 10px;
 }
 
 div.complete{
-	position: absolute;
+    position: absolute;
     z-index: 1001;
     background-color: black;
     max-height: 200px;
@@ -138,30 +138,30 @@ div.complete{
 }
 
 .complete a{
-	color: white;
+    color: white;
 }
 
 div.description label{
-	color: white;
+    color: white;
 }
 
 
 
 div.description{
-	float: left;
+    float: left;
     width: 150px;
     padding-top: 10px;
 }
 
 .description .name{
-	margin-bottom: 0px;
-	font-size: 10pt;
+    margin-bottom: 0px;
+    font-size: 10pt;
 }
 
 .description .artist, .description .album{
-	font-size: 8pt;
-	margin-top: 0px;
-	margin-bottom: 0px;
+    font-size: 8pt;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 a.github{
@@ -173,7 +173,7 @@ a.github{
 }
 
 a.github i{
-	font-size: 45px;
+    font-size: 45px;
     margin-top: 5px;
     color: #1ed760;
 }
@@ -189,46 +189,46 @@ div.tracks{
 }
 
 .track .image{
-	width: 60px;
-	height: 60px;
-	overflow: hidden;
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
 }
 
 .track{
-	display: block;
+    display: block;
     width: 100%;
     margin-bottom: 2px;
     cursor: pointer;
 }
 
 .track label{
-	text-align: center;
-	margin-top: 0;
-	margin-bottom: 0;
-	padding: 0;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 0;
 }
 
 div.tracks{
-	position: absolute;
-	bottom: 105px;
-	height: 250px;
-	left: 0;
-	overflow-y: overlay;
-	overflow-x: hidden;
+    position: absolute;
+    bottom: 105px;
+    height: 250px;
+    left: 0;
+    overflow-y: overlay;
+    overflow-x: hidden;
 }
 
 .tracks .list-group .track img{
-	width: 40px;
-	height: 40px;
-	border-radius: 100px;
-	float: left;
+    width: 40px;
+    height: 40px;
+    border-radius: 100px;
+    float: left;
 }
 
 .tracks .track .track-name{
-	float: left;
-	width: 150px;
-	text-align: left;
-	padding-left: 15px;
+    float: left;
+    width: 150px;
+    text-align: left;
+    padding-left: 15px;
 }
 
 a.list-group-item.track{
@@ -267,4 +267,23 @@ div.loading{
     background-image: url('../images/loading.gif');
     background-repeat: no-repeat;
     background-size: 50px 50px;
+}
+
+div#player {
+    height: 70px;
+    background-color: black;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+
+div.play-pause {
+    color: #c3c3c3;
+    font-size: 40pt;
+    padding-top: 6px;
+    padding-left: 270px;
+}
+
+div.play-pause i {
+    cursor: pointer;
 }
